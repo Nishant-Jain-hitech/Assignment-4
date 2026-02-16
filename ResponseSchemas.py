@@ -69,3 +69,8 @@ class GetTeacherResponse(BaseModel):
 class GetStudentResponse(BaseModel):
     name:str
     courses:List[dict]
+
+
+class GetCourseResponse(BaseModel):
+    course:str
+    students:List[str]

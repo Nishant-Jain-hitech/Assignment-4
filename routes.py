@@ -9,7 +9,8 @@ from ResponseSchemas import (
     CourseResponse,
     EnrollmentResponse,
     GetTeacherResponse,
-    GetStudentResponse
+    GetStudentResponse,
+    GetCourseResponse
 )
 from CreateSchemas import (
     DepartmentModel,
@@ -135,7 +136,7 @@ def get_student(student_id:int, db:Session=Depends(get_db)):
     }
 
 
-@router.get("/lazy/courses/{course_id}")
+@router.get("/lazy/courses/{course_id}", response_model=GetCourseResponse)
 def get_course(course_id:int, db:Session=Depends(get_db)):
     course=db.query(Course).filter(Course.id==course_id).first()
     if not course:
