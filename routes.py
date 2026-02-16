@@ -108,6 +108,13 @@ def create_enrollment(enrollment: EnrollmentModel, db: Session = Depends(get_db)
 
 # get apis
 
+@router.get("/students")
+def get_student_by_semester(semester:int|None=None,db:Session=Depends(get_db)):
+    if semester:
+        return db.query(Student).join(Enrollment).filter(Enrollment.semester==semester).all()
+    else:
+        raise ValueError("semester sahi daal")
+
 
 @router.get("/lazy/teachers/{teacher_id}", response_model=GetTeacherResponse)
 def get_teacher(teacher_id: int, db: Session = Depends(get_db)):
@@ -145,4 +152,16 @@ def get_course(course_id:int, db:Session=Depends(get_db)):
     return {
         "course":course.title,
         "students":[e.student.name for e in course.enrollments]
+    }
+
+
+@router.get("/departments/{department_id}")
+def get_department(department_id:int, db:Session=Depends(get_db)):
+    department=db.query(Department).filter(Department.id==department_id).first()
+    if not department:
+        raise HTTPException(status_code=404, detail="Department nhi h bhai")
+
+    return {
+        "department_name":department.name,
+        "teachers":[t.name for t in department.teacher]
     }
